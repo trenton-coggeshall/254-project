@@ -1,3 +1,4 @@
+import axios from 'axios';
 import './App.css';
 import Calendar from 'react-calendar'
 import Event from "./components/Event";
@@ -5,11 +6,21 @@ import 'react-calendar/dist/Calendar.css';
 import React, { useState, useEffect } from 'react';
 
 function App() {
-  const [value, setValue] = useState(new Date());
+  const [date, setDate] = useState(new Date());
+  const [startTime, setStart] = useState('');
+  const [endTime, setEnd] = useState('');
+  const [title, setTitle] = useState('');
 
-  useEffect(() => {
-    console.log(value.toLocaleDateString('en-us'));
-  }, [value]);
+  const submitHandler = event => {
+    event.preventDefault();
+    axios.post('http://localhost:8080/add', {date: date.toLocaleDateString('en-us'), startTime: startTime, endTime: endTime, title: title})
+    .then((data) => {
+      console.log(data);
+      setStart('');
+      setEnd('');
+      setTitle('');
+    });
+  }
 
   return (
     <div className="App">
@@ -19,8 +30,8 @@ function App() {
 
       <div className='app-body'>
         <Calendar 
-          onChange={setValue}
-          value={value}
+          onChange={setDate}
+          value={date}
           />
           <ul>
             <Event
@@ -33,8 +44,32 @@ function App() {
             name={'Kind of cool after party'}/>
           </ul>
       </div>
-      
-      
+      <form onSubmit={submitHandler}>
+        <input
+          placeholder='Enter Start Time'
+          value={startTime}
+          onChange={(event) => {
+            setStart(event.target.value);
+          }}
+        />
+        <input
+          placeholder='Enter End Time'
+          value={endTime}
+          onChange={(event) => {
+            setEnd(event.target.value);
+          }}
+        />
+        <input
+          placeholder='Enter Event Title'
+          value={title}
+          onChange={(event) => {
+            setTitle(event.target.value);
+          }}
+        />
+        <button type='submit'>
+          Add Event
+        </button>
+      </form>
     </div>
   );
 }
