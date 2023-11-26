@@ -10,12 +10,14 @@ function App() {
   const [startTime, setStart] = useState('');
   const [endTime, setEnd] = useState('');
   const [title, setTitle] = useState('');
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState([]); // Array of events on a particular date
 
+  // When the date value is changed, call updateDate
   useEffect(() => {
     updateDate(date);
   }, [date]);
 
+  // Submit new event data to the database
   const submitHandler = event => {
     event.preventDefault();
     axios.post('http://localhost:8080/add', {date: date.toLocaleDateString('en-us'), startTime: startTime, endTime: endTime, title: title})
@@ -28,6 +30,7 @@ function App() {
     });
   }
 
+  // Retrieve event data for the current date from the database
   const updateDate = (newDate) => {
     axios.post('http://localhost:8080/test', {date: date.toLocaleDateString('en-us')})
     .then((data) => {

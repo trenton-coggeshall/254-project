@@ -8,6 +8,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(cors());
 
+// Connect to mysql database
 var db  = mysql.createPool({
     connectionLimit : 10,
     host            : 'localhost',
@@ -16,6 +17,7 @@ var db  = mysql.createPool({
     database        : 'event_calendar'
   });
 
+// Get all events on a specific date from the database
 app.post('/test', (req, res) => {
     const date = req.body.date;
     
@@ -28,6 +30,7 @@ app.post('/test', (req, res) => {
     }); 
 });
 
+// Add new event to the database
 app.post('/add', (req, res) => {
     const date = req.body.date;
     const startTime = req.body.startTime;
@@ -43,6 +46,7 @@ app.post('/add', (req, res) => {
     });
 })
 
+// Start the server and listen on port 8080
 app.listen(8080, () => {
     console.log('server listening on port 8080');
 })
