@@ -16,14 +16,16 @@ var db  = mysql.createPool({
     database        : 'event_calendar'
   });
 
-app.get('/', (req, res) => {
-    db.query("INSERT INTO Events (Date, StartTime, EndTime, Title) VALUES ('11/22/2023', '12:00pm', '3:00pm', 'Work on homework')", (err, result) => {
+app.post('/test', (req, res) => {
+    const date = req.body.date;
+    
+    db.query("SELECT * FROM Events WHERE Date = (?)", [date], (err, result) => {
         if (err) {
             console.log(err);
         } else {
-            console.log(result);
+            res.send(result);
         }
-    });
+    }); 
 });
 
 app.post('/add', (req, res) => {
@@ -31,6 +33,7 @@ app.post('/add', (req, res) => {
     const startTime = req.body.startTime;
     const endTime = req.body.endTime;
     const title = req.body.title;
+
     db.query("INSERT INTO Events (Date, StartTime, EndTime, Title) VALUES (?, ?, ?, ?)", [date, startTime, endTime, title], (err, result) => {
         if (err) {
             console.log(err);
